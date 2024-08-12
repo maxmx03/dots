@@ -107,6 +107,10 @@ function _dots_update() {
   fi
 }
 
+function _dots_exit() {
+  exit 1
+}
+
 function dots() {
   declare DOTS_CMD
   DOTS_CMD=$(gum choose --limit 1 "add" "install" "update" "list" "remove")
@@ -117,6 +121,7 @@ function dots() {
     [install]="_dots_install"
     [list]="_dots_list"
     [remove]="_dots_remove"
+    [exit]="_dots_exit"
   )
 
   if [[ -n "${subcmds[$DOTS_CMD]}" ]]; then
