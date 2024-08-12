@@ -4,8 +4,7 @@ export DOTS_DATA_FILE="$DOTS_DIR/dots.txt"
 
 _dots_remove() {
   declare config answer config_list
-  config_list=$(grep "" "$DOTS_DATA_FILE")
-  config=$(gum choose "$config_list")
+  config=$(gum choose $(grep " " "$DOTS_DATA_FILE"))
 
   if [ -n "$config" ] && [ -e "$config" ]; then
     gum style --foreground 37 "the followings commands are going to be executed:"
@@ -85,8 +84,7 @@ function _dots_install() {
 
 function _dots_update() {
   declare config answer config_list
-  config_list=$(grep "" "$DOTS_DATA_FILE")
-  config=$(gum choose "$config_list")
+  config=$(gum choose $(grep " " "$DOTS_DATA_FILE"))
 
   if [ -n "$config" ] && [ -e "$config" ]; then
     gum style --foreground 37 "the followings commands are going to be executed:"
