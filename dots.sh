@@ -12,7 +12,6 @@ function _dots_remove() {
     gum confirm "proceed with these commands?" && answer="y"
 
     if [ "$answer" = "y" ]; then
-      echo "⚡ Dots - removing $config"
       gum spin --spinner dot --title "removing $HOME/$config" -- sleep 3
       rm -rf "$HOME/$config"
       gum log --structured --level info "the $HOME/$config has been removed"
