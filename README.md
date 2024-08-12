@@ -1,5 +1,8 @@
 # Dotfiles manager
 
+> [!CAUTION]
+> This script is intended for personal use, Use it at your own risk.
+
 Welcome to the Dotfiles Manager! This script helps you manage your dotfiles
 easily.
 
