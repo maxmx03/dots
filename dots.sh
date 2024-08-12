@@ -2,11 +2,11 @@
 export DOTS_DIR="${XDG_DATA_HOME:-$HOME}/dotfiles"
 export DOTS_DATA_FILE="$DOTS_DIR/dots.txt"
 
-_dots_remove() {
-  declare config answer config_list
-  config=$(gum choose $(grep " " "$DOTS_DATA_FILE"))
+function _dots_remove() {
+  declare config answer
+  config=$(gum choose $(grep "" "$DOTS_DATA_FILE"))
 
-  if [ -n "$config" ] && [ -e "$config" ]; then
+  if [ -n "$config" ] && [ -e "$HOME/$config" ]; then
     gum style --foreground 37 "the followings commands are going to be executed:"
     gum style --foreground 160 "rm -rf $HOME/$config"
     gum confirm "proceed with these commands?" && answer="y"
@@ -14,8 +14,8 @@ _dots_remove() {
     if [ "$answer" = "y" ]; then
       echo "⚡ Dots - removing $config"
       gum spin --spinner dot --title "removing $HOME/$config" -- sleep 3
-      rm -rf "$("$HOME/$config")"
-      gum log --structured --level info "the $config has been removed"
+      rm -rf "$HOME/$config"
+      gum log --structured --level info "the $HOME/$config has been removed"
     else
       gum log --structured --level info "operation canceled"
     fi
@@ -24,7 +24,7 @@ _dots_remove() {
   fi
 }
 
-_dots_list() {
+function _dots_list() {
   if [ ! -e "$DOTS_DATA_FILE" ]; then
     touch "$DOTS_DATA_FILE"
   fi
@@ -53,10 +53,10 @@ function _dots_add() {
 }
 
 function _dots_install() {
-  declare config answer config_list
-  config=$(gum choose $(grep " " "$DOTS_DATA_FILE"))
+  declare config answer
+  config=$(gum choose $(grep "" "$DOTS_DATA_FILE"))
 
-  if [ "$config" == ".bashrc" ]; then
+  if [ "$DOTS_DIR/$config" == ".bashrc" ]; then
     echo >>"$HOME/.bashrc"
     gum spin --spinner dot --title "installing $config..." -- sleep 3
     exit 1
@@ -69,7 +69,7 @@ function _dots_install() {
 
       if [ "$answer" = "y" ]; then
         gum spin --spinner dot --title "removing '$HOME/$config..." -- sleep 3
-        rm -rf "$("$HOME/$config")"
+        rm -rf "$HOME/$config"
         _dots_installation "$config"
       else
         gum log --structured --level info "operation canceled: $answer"
@@ -83,23 +83,21 @@ function _dots_install() {
 }
 
 function _dots_update() {
-  declare config answer config_list
-  config=$(gum choose $(grep " " "$DOTS_DATA_FILE"))
+  declare config answer
+  config=$(gum choose $(grep "" "$DOTS_DATA_FILE"))
 
-  if [ -n "$config" ] && [ -e "$config" ]; then
+  if [ -n "$config" ] || [ -e "$HOME/$config" ]; then
     gum style --foreground 37 "the followings commands are going to be executed:"
     gum style --foreground 160 "rm -rf '$DOTS_DIR/$config'"
-    gum style --foreground 160 "cp -r '$config' '$DOTS_DIR/$config'"
+    gum style --foreground 160 "cp -r '$HOME/$config' '$DOTS_DIR/$config'"
     gum confirm "proceed with these commands?" && answer="y"
 
     if [ "$answer" = "y" ]; then
-      gum spin --spinner dot --title "removing '$DOTS_DIR/$config..." -- sleep 5
-      rm -rf "$("$DOTS_DIR/$config")"
-
-      echo "⚡ Dots - copying $config to $DOTS_DIR/$config"
-      gum spin --spinner dot --title "copying '$config' to '$DOTS_DIR/$config'..." -- sleep 5
-      cp -r "$config" "$DOTS_DIR/$config"
-
+      gum spin --spinner dot --title "removing '$DOTS_DIR/$config'..." -- sleep 5
+      rm -rf "$DOTS_DIR/$config"
+      gum style --foreground 37 "copying '$HOME/$config' to '$DOTS_DIR/$config'"
+      gum spin --spinner dot --title "copying '$HOME/$config' to '$DOTS_DIR/$config'..." -- sleep 5
+      cp -r "$HOME/$config" "$DOTS_DIR/$config"
       gum log --structured --level info "the $DOTS_DIR/$config  has been updated"
     else
       gum log --structured --level info "operation canceled"
@@ -111,7 +109,6 @@ function _dots_update() {
 
 function dots() {
   declare DOTS_CMD
-
   DOTS_CMD=$(gum choose --limit 1 "add" "install" "update" "list" "remove")
 
   declare -A subcmds=(
