@@ -50,7 +50,7 @@ function _dots_installation() {
 }
 
 function _dots_add() {
-  gum write >>"$DOTS_DATA_FILE"
+  gum write --placeholder "You can add multiple config ex: .config/nvim .config/kitty" >>"$DOTS_DATA_FILE"
 }
 
 function _dots_install() {
