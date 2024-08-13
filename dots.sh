@@ -55,7 +55,7 @@ function _dots_install() {
   declare config answer
   config=$(gum choose $(grep "" "$DOTS_DATA_FILE"))
 
-  if [ "$DOTS_DIR/$config" == ".bashrc" ]; then
+  if [ "$config" == ".bashrc" ]; then
     echo >>"$HOME/.bashrc"
     gum spin --spinner dot --title "installing $config..." -- sleep 3
     exit 1
