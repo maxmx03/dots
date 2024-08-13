@@ -112,7 +112,7 @@ function _dots_exit() {
 
 function dots() {
   declare DOTS_CMD
-  DOTS_CMD=$(gum choose --limit 1 "add" "install" "update" "list" "remove")
+  DOTS_CMD=$(gum choose --limit 1 "add" "install" "update" "list" "remove" "exit")
 
   declare -A subcmds=(
     [update]="_dots_update"
