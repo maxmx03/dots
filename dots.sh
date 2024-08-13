@@ -56,9 +56,11 @@ function _dots_install() {
   config=$(gum choose $(grep "" "$DOTS_DATA_FILE"))
 
   if [ "$config" == ".bashrc" ]; then
-    echo >>"$HOME/.bashrc"
+    echo "source $DOTS_DIR/$config" >>"$HOME/.bashrc"
     gum spin --spinner dot --title "installing $config..." -- sleep 3
-    exit 1
+    gum spin --spinner dot --title "exiting..." -- sleep 1
+    gum style --foreground 64  "completd"
+    return
   fi
 
   if [ -n "$config" ]; then
@@ -107,7 +109,8 @@ function _dots_update() {
 }
 
 function _dots_exit() {
-  exit 1
+  gum spin --spinner dot --title "exiting..." -- sleep 1
+  return
 }
 
 function dots() {
